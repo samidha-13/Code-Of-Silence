@@ -309,14 +309,20 @@ const CodeOfSilence = () => {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             {[
-              { name: "Dr. Verma's Office", icon: "📁", desc: "Personal files and notes" },
-              { name: "Research Lab", icon: "🔬", desc: "Experimental data" },
-              { name: "Archives", icon: "📚", desc: "Historical records" },
-              { name: "Server Files", icon: "💾", desc: "Digital evidence", active: true }
+              { name: "Dr. Verma's Office", icon: "📁", desc: "Personal files and notes", active: true, room: "verma" },
+              { name: "Research Lab", icon: "🔬", desc: "Experimental data", active: true, room: "research" },
+              { name: "Archives", icon: "📚", desc: "Historical records", active: true, room: "archive" },
+              { name: "Server Files", icon: "💾", desc: "Digital evidence", active: true, room: "server" }
             ].map((folder, idx) => (
-              <div
+              <a
                 key={idx}
-                onClick={() => folder.active && setView('main')}
+                href={folder.active ? `/game?room=${folder.room}` : undefined}
+                onClick={(e) => {
+                  if (!folder.active) {
+                    e.preventDefault();
+                    toast.error(`${folder.name} is currently locked`);
+                  }
+                }}
                 style={{
                   background: folder.active ? 'rgba(125,211,252,0.05)' : 'rgba(255,255,255,0.02)',
                   border: `1px solid ${folder.active ? 'rgba(125,211,252,0.2)' : 'rgba(255,255,255,0.05)'}`,
@@ -325,7 +331,9 @@ const CodeOfSilence = () => {
                   cursor: folder.active ? 'pointer' : 'not-allowed',
                   opacity: folder.active ? 1 : 0.5,
                   transition: 'all 0.2s',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  display: 'block'
                 }}
               >
                 <div style={{ fontSize: '48px', marginBottom: '8px' }}>{folder.icon}</div>
@@ -333,7 +341,7 @@ const CodeOfSilence = () => {
                 <div style={{ fontSize: '13px', color: '#9ca3af' }}>{folder.desc}</div>
                 {folder.active && <div style={{ marginTop: '8px', fontSize: '12px', color: '#34d399' }}>✓ Available</div>}
                 {!folder.active && <div style={{ marginTop: '8px', fontSize: '12px', color: '#ef4444' }}>🔒 Locked</div>}
-              </div>
+              </a>
             ))}
           </div>
           <button
