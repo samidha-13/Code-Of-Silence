@@ -4,7 +4,7 @@ import { useGame } from "@/contexts/GameContext";
 
 const CodeOfSilence = () => {
   const { timeRemaining } = useGame();
-  const [view, setView] = useState<'landing' | 'folders' | 'main' | 'wire'>('landing');
+  const [view, setView] = useState<'landing' | 'folders' | 'main' | 'wire'>('folders');
   const [d2Popup, setD2Popup] = useState(false);
   const [xValue, setXValue] = useState("");
   const [xMessage, setXMessage] = useState({ text: "", success: false });
