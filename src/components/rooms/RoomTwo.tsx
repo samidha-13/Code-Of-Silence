@@ -82,7 +82,7 @@ const LoadModel = () => {
     }
   }, [scene]);
 
-  return <primitive object={scene} position={[0, 0, 0]} scale={0.12} />;
+  return <primitive object={scene} position={[0, 0, 0]} scale={0.15} />;
 };
 
 const FirstPersonControls = () => {
@@ -170,12 +170,14 @@ const FirstPersonControls = () => {
 const RoomTwo = () => {
   return (
     <div className="h-screen w-screen bg-black">
-      <Canvas camera={{ position: [0, 3, 5], fov: 75 }}>
-        <PerspectiveCamera makeDefault position={[0, 3, 5]} fov={75} />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-        <pointLight position={[0, 5, 0]} intensity={1} />
-        <pointLight position={[5, 3, 5]} intensity={0.5} color="#ffffff" />
+      <Canvas camera={{ position: [0, 4, 8], fov: 75 }}>
+        <PerspectiveCamera makeDefault position={[0, 4, 8]} fov={75} />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[10, 10, 10]} intensity={1.5} castShadow />
+        <directionalLight position={[-10, 10, -10]} intensity={0.8} />
+        <pointLight position={[0, 6, 0]} intensity={2} />
+        <pointLight position={[5, 4, 5]} intensity={1.5} color="#ffffff" />
+        <pointLight position={[-5, 4, -5]} intensity={1.5} color="#ffffff" />
 
         <Suspense fallback={null}>
           <LoadModel />
