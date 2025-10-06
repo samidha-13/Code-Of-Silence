@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { useGame } from "@/contexts/GameContext";
 
 const CodeOfSilence = () => {
+  const { timeRemaining } = useGame();
   const [view, setView] = useState<'main' | 'wire'>('main');
   const [d2Popup, setD2Popup] = useState(false);
   const [xValue, setXValue] = useState("");
@@ -13,6 +15,8 @@ const CodeOfSilence = () => {
   const [selectedTerminal, setSelectedTerminal] = useState<string | null>(null);
   const [connections, setConnections] = useState<Record<string, string>>({});
   const [wireStatus, setWireStatus] = useState("");
+  const [passcodeInput, setPasscodeInput] = useState("");
+  const [passcodeMessage, setPasscodeMessage] = useState({ text: "", success: false });
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const D2_CORRECT = 7;
@@ -184,6 +188,34 @@ const CodeOfSilence = () => {
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handlePasscodeSubmit = () => {
+    const correctPasscode = assembledCode();
+    if (correctPasscode === '—') {
+      setPasscodeMessage({ text: "❌ Solve D2 and D3 puzzles first!", success: false });
+      return;
+    }
+    
+    if (passcodeInput === correctPasscode) {
+      setPasscodeMessage({ text: "✅ Correct! Access Granted!", success: true });
+      toast.success("Passcode verified! Access granted!");
+      setTimeout(() => {
+        setPasscodeMessage({ text: "", success: false });
+        setPasscodeInput("");
+      }, 2000);
+    } else {
+      setPasscodeMessage({ text: "❌ Incorrect passcode. Try again.", success: false });
+      setTimeout(() => {
+        setPasscodeMessage({ text: "", success: false });
+      }, 2000);
+    }
+  };
+
   return (
     <div style={{ 
       margin: 0, 
@@ -206,7 +238,23 @@ const CodeOfSilence = () => {
           boxShadow: '0 8px 30px rgba(4,10,20,0.7)' 
         }}>
           <header style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-            <div style={{ width: '48px', height: '48px', visibility: 'hidden' }}></div>
+            <div style={{ 
+              width: '80px', 
+              height: '80px', 
+              display: 'flex', 
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(125,211,252,0.1)',
+              border: '2px solid rgba(125,211,252,0.3)',
+              borderRadius: '8px',
+              padding: '8px'
+            }}>
+              <div style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '2px' }}>TIME</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: timeRemaining < 300 ? '#ef4444' : '#7dd3fc', fontFamily: 'monospace' }}>
+                {formatTime(timeRemaining)}
+              </div>
+            </div>
             <div>
               <h1 style={{ fontSize: '20px', margin: 0, color: '#7dd3fc' }}>Forensics & Facility (Map Mystery)</h1>
               <div style={{ fontSize: '13px', color: '#9ca3af' }}>Use the map and wiring layout to extract two passcode digits.</div>
@@ -400,6 +448,62 @@ const CodeOfSilence = () => {
                       Copy code to clipboard
                     </button>
                   </div>
+                </div>
+                <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <strong>Enter 4-Digit Passcode:</strong>
+                  <div style={{ marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      type="text"
+                      value={passcodeInput}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                        setPasscodeInput(value);
+                      }}
+                      onKeyUp={(e) => e.key === 'Enter' && passcodeInput.length === 4 && handlePasscodeSubmit()}
+                      placeholder="8745"
+                      maxLength={4}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#071827',
+                        color: 'white',
+                        borderRadius: '6px',
+                        fontSize: '18px',
+                        textAlign: 'center',
+                        fontFamily: 'monospace',
+                        letterSpacing: '4px'
+                      }}
+                    />
+                    <button 
+                      onClick={handlePasscodeSubmit}
+                      disabled={passcodeInput.length !== 4}
+                      style={{
+                        background: passcodeInput.length === 4 ? 'linear-gradient(180deg,rgba(125,211,252,0.2),rgba(125,211,252,0.1))' : 'rgba(255,255,255,0.02)',
+                        border: '1px solid rgba(255,255,255,0.04)',
+                        color: passcodeInput.length === 4 ? '#7dd3fc' : '#9ca3af',
+                        padding: '10px 16px',
+                        borderRadius: '6px',
+                        cursor: passcodeInput.length === 4 ? 'pointer' : 'not-allowed',
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        opacity: passcodeInput.length === 4 ? 1 : 0.5
+                      }}
+                    >
+                      Verify
+                    </button>
+                  </div>
+                  {passcodeMessage.text && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      fontWeight: 'bold', 
+                      fontSize: '14px',
+                      color: passcodeMessage.success ? '#34d399' : '#ef4444',
+                      textAlign: 'center' 
+                    }}>
+                      {passcodeMessage.text}
+                    </div>
+                  )}
                 </div>
               </div>
             </aside>
