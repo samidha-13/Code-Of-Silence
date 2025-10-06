@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { TitleScreen } from "@/components/intro/TitleScreen";
 import { LogoReveal } from "@/components/intro/LogoReveal";
@@ -14,23 +14,6 @@ const Index = () => {
   const [phase, setPhase] = useState<Phase>(skipToMap ? "investigation" : "title");
   const [analystName, setAnalystName] = useState("");
   const [operatorName, setOperatorName] = useState("");
-  const [timeRemaining, setTimeRemaining] = useState(3600);
-
-  useEffect(() => {
-    if (phase === "investigation") {
-      const timer = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 0) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [phase]);
 
   const handleTeamComplete = (analyst: string, operator: string) => {
     setAnalystName(analyst);
@@ -43,7 +26,7 @@ const Index = () => {
       {phase === "title" && <TitleScreen onComplete={() => setPhase("logo")} />}
       {phase === "logo" && <LogoReveal onComplete={() => setPhase("team")} />}
       {phase === "team" && <TeamIdentification onComplete={handleTeamComplete} />}
-      {phase === "investigation" && <InvestigationMap timeRemaining={timeRemaining} />}
+      {phase === "investigation" && <InvestigationMap />}
     </main>
   );
 };
