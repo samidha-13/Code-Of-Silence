@@ -5,10 +5,31 @@ import { Suspense, lazy } from "react";
 
 // Lazy load the room components
 const RoomOne = lazy(() => import("@/components/rooms/RoomOne"));
+const RoomTwo = lazy(() => import("@/components/rooms/RoomTwo"));
+const RoomThree = lazy(() => import("@/components/rooms/RoomThree"));
+const RoomFour = lazy(() => import("@/components/rooms/RoomFour"));
 
 const Game = () => {
   const [searchParams] = useSearchParams();
   const roomName = searchParams.get("room") || "";
+
+  // Map room names to components
+  const getRoomComponent = () => {
+    const normalizedName = roomName.toLowerCase();
+    
+    if (normalizedName.includes("verma") || normalizedName.includes("office")) {
+      return <RoomOne />;
+    } else if (normalizedName.includes("research") || normalizedName.includes("lab")) {
+      return <RoomTwo />;
+    } else if (normalizedName.includes("archive")) {
+      return <RoomThree />;
+    } else if (normalizedName.includes("server")) {
+      return <RoomFour />;
+    }
+    
+    // Default to room one
+    return <RoomOne />;
+  };
 
   return (
     <div className="min-h-screen bg-black relative">
@@ -29,7 +50,7 @@ const Game = () => {
           <div className="text-white text-2xl font-display">Loading room...</div>
         </div>
       }>
-        <RoomOne />
+        {getRoomComponent()}
       </Suspense>
     </div>
   );
