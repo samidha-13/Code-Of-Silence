@@ -69,8 +69,24 @@ function WebsiteScreen() {
 }
 
 const LoadModel = () => {
+  // Placeholder - Replace with actual model when available
+  return (
+    <group>
+      <mesh position={[0, 1, 0]}>
+        <boxGeometry args={[4, 2, 4]} />
+        <meshStandardMaterial color="#444" wireframe />
+      </mesh>
+      <mesh position={[0, 0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[10, 10]} />
+        <meshStandardMaterial color="#222" />
+      </mesh>
+    </group>
+  );
+  
+  // Uncomment below when you have the actual model file:
+  /*
   const { scene } = useGLTF("/model/RoomTwoModel.glb");
-
+  
   useEffect(() => {
     if (scene) {
       scene.traverse((child: any) => {
@@ -83,6 +99,7 @@ const LoadModel = () => {
   }, [scene]);
 
   return <primitive object={scene} position={[0, 0, 0]} scale={0.12} />;
+  */
 };
 
 const FirstPersonControls = () => {
@@ -170,6 +187,13 @@ const FirstPersonControls = () => {
 const RoomTwo = () => {
   return (
     <div className="h-screen w-screen bg-black">
+      {/* Missing Model Notice */}
+      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-900/20 border border-red-500 px-6 py-3 rounded-lg z-50">
+        <p className="text-red-400 text-sm font-mono text-center">
+          ⚠️ 3D Model Missing: Add RoomTwoModel.glb to public/model/
+        </p>
+      </div>
+
       <Canvas camera={{ position: [0, 3, 5], fov: 75 }}>
         <PerspectiveCamera makeDefault position={[0, 3, 5]} fov={75} />
         <ambientLight intensity={0.3} />
@@ -178,7 +202,6 @@ const RoomTwo = () => {
 
         <Suspense fallback={null}>
           <LoadModel />
-          <WebsiteScreen />
           <FirstPersonControls />
         </Suspense>
       </Canvas>
