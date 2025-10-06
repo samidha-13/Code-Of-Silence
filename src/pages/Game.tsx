@@ -34,7 +34,7 @@ const Game = () => {
   return (
     <div className="min-h-screen bg-black relative">
       {/* Back Button */}
-      <Link to="/" className="fixed top-8 left-8 z-50">
+      <Link to="/?skipIntro=true" className="fixed top-8 left-8 z-50">
         <Button
           variant="outline"
           className="h-12 px-6 font-display font-bold bg-black/80 border-red-900/70 text-white hover:bg-red-900/20 hover:border-red-600"

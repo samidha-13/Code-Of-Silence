@@ -57,7 +57,7 @@ function WebsiteScreen() {
           {isZoomed ? 'Normal' : 'Zoom'}
         </button>
         <iframe
-          src="https://code-of-silence-unlocked-53719-03265.lovable.app/"
+          src="https://code-of-silence-unlocked-53719-03265-76115.lovable.app/"
           style={{
             width: "1020px",
             height: "600px",

@@ -52,7 +52,7 @@ function WebsiteScreen() {
           {isZoomed ? 'Normal' : 'Zoom'}
         </button>
         <iframe
-          src="https://code-of-silence-unlocked-53719-03265.lovable.app/"
+          src="https://code-of-silence-unlocked-53719-03265-76115.lovable.app/"
           style={{
             width: "1020px",
             height: "600px",
@@ -172,9 +172,10 @@ const RoomTwo = () => {
     <div className="h-screen w-screen bg-black">
       <Canvas camera={{ position: [0, 3, 5], fov: 75 }}>
         <PerspectiveCamera makeDefault position={[0, 3, 5]} fov={75} />
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[5, 5, 5]} intensity={0.5} />
-        <pointLight position={[0, 3, 0]} intensity={0.5} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+        <pointLight position={[0, 5, 0]} intensity={1} />
+        <pointLight position={[5, 3, 5]} intensity={0.5} color="#ffffff" />
 
         <Suspense fallback={null}>
           <LoadModel />
