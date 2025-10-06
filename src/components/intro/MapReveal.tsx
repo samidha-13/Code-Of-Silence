@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BookOpen, Beaker, FolderOpen, Server } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { LoadingScreen } from "./LoadingScreen";
 
 interface Location {
   id: string;
@@ -50,8 +50,19 @@ const locations: Location[] = [
 export const MapReveal = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingLocation, setLoadingLocation] = useState<Location | null>(null);
   
   const selectedLocation = selectedId ? locations.find(loc => loc.id === selectedId) : null;
+
+  const handleLocationClick = (location: Location) => {
+    setLoadingLocation(location);
+    setIsLoading(true);
+  };
+
+  if (isLoading && loadingLocation) {
+    return <LoadingScreen locationName={loadingLocation.name} locationColor={loadingLocation.color} />;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black flex items-center justify-center animate-zoom-in">
@@ -122,7 +133,10 @@ export const MapReveal = () => {
             }}
             onMouseEnter={() => setHoveredId(location.id)}
             onMouseLeave={() => setHoveredId(null)}
-            onClick={() => setSelectedId(location.id)}
+            onClick={() => {
+              setSelectedId(location.id);
+              handleLocationClick(location);
+            }}
           >
             {/* Outer Glow Pulse */}
             <div
@@ -257,16 +271,14 @@ export const MapReveal = () => {
 
       {/* Call to Action Button */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in">
-        <Link to="/game">
-          <Button
-            className="h-16 px-8 text-lg font-display font-bold bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white border-2 border-red-600/50"
-            style={{
-              boxShadow: "0 0 40px rgba(220, 38, 38, 0.4)",
-            }}
-          >
-            Only the right name reveals the way forward. Which room will you try?
-          </Button>
-        </Link>
+        <Button
+          className="h-16 px-8 text-lg font-display font-bold bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white border-2 border-red-600/50"
+          style={{
+            boxShadow: "0 0 40px rgba(220, 38, 38, 0.4)",
+          }}
+        >
+          Only the right name reveals the way forward. Which room will you try?
+        </Button>
       </div>
     </div>
   );
