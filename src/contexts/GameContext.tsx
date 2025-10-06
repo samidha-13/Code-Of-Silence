@@ -4,12 +4,15 @@ interface GameContextType {
   timeRemaining: number;
   puzzleSolved: boolean;
   setPuzzleSolved: (solved: boolean) => void;
+  websiteUrl: string;
+  setWebsiteUrl: (url: string) => void;
   resetGame: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 const GAME_DURATION = 3600; // 60 minutes in seconds
+const DEFAULT_WEBSITE_URL = "https://code-of-silence-unlocked-53719-03265-76115.lovable.app/";
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [gameStartTime, setGameStartTime] = useState<number>(() => {
@@ -20,6 +23,11 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [puzzleSolved, setPuzzleSolvedState] = useState<boolean>(() => {
     const saved = localStorage.getItem("puzzleSolved");
     return saved === "true";
+  });
+
+  const [websiteUrl, setWebsiteUrlState] = useState<string>(() => {
+    const saved = localStorage.getItem("websiteUrl");
+    return saved || DEFAULT_WEBSITE_URL;
   });
 
   const [timeRemaining, setTimeRemaining] = useState<number>(() => {
@@ -50,16 +58,23 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("puzzleSolved", solved.toString());
   };
 
+  const setWebsiteUrl = (url: string) => {
+    setWebsiteUrlState(url);
+    localStorage.setItem("websiteUrl", url);
+  };
+
   const resetGame = () => {
     const newStartTime = Date.now();
     setGameStartTime(newStartTime);
     setPuzzleSolvedState(false);
+    setWebsiteUrlState(DEFAULT_WEBSITE_URL);
     localStorage.setItem("gameStartTime", newStartTime.toString());
     localStorage.setItem("puzzleSolved", "false");
+    localStorage.setItem("websiteUrl", DEFAULT_WEBSITE_URL);
   };
 
   return (
-    <GameContext.Provider value={{ timeRemaining, puzzleSolved, setPuzzleSolved, resetGame }}>
+    <GameContext.Provider value={{ timeRemaining, puzzleSolved, setPuzzleSolved, websiteUrl, setWebsiteUrl, resetGame }}>
       {children}
     </GameContext.Provider>
   );

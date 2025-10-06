@@ -2,10 +2,24 @@ import { Suspense, useEffect, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Html, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
+import { useGame } from "@/contexts/GameContext";
 
 function WebsiteScreen() {
+  const { websiteUrl, setWebsiteUrl } = useGame();
   const [scale, setScale] = useState(1.6);
   const [isZoomed, setIsZoomed] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Listen for URL changes from the iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'urlChange' && event.data.url) {
+        setWebsiteUrl(event.data.url);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [setWebsiteUrl]);
 
   const handleScaleClick = () => {
     setScale(isZoomed ? 1.6 : 4);
@@ -44,7 +58,8 @@ function WebsiteScreen() {
           {isZoomed ? 'Normal' : 'Zoom'}
         </button>
         <iframe
-          src="https://code-of-silence-unlocked-53719-03265-76115.lovable.app/"
+          ref={iframeRef}
+          src={websiteUrl}
           style={{
             width: "1020px",
             height: "600px",
