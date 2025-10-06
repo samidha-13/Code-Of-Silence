@@ -1,45 +1,16 @@
-import { useState, useEffect } from "react";
-import { TitleScreen } from "@/components/intro/TitleScreen";
-import { LogoReveal } from "@/components/intro/LogoReveal";
-import { TeamIdentification } from "@/components/intro/TeamIdentification";
-import { InvestigationMap } from "@/components/intro/InvestigationMap";
+import { useState } from "react";
+import { CoverLoadingScreen } from "@/components/intro/CoverLoadingScreen";
+import { CoverMapReveal } from "@/components/intro/CoverMapReveal";
 
-type Phase = "title" | "logo" | "team" | "investigation";
+type Phase = "loading" | "map";
 
 const Index = () => {
-  const [phase, setPhase] = useState<Phase>("title");
-  const [analystName, setAnalystName] = useState("");
-  const [operatorName, setOperatorName] = useState("");
-  const [timeRemaining, setTimeRemaining] = useState(3600); // 60 minutes in seconds
-
-  useEffect(() => {
-    if (phase === "investigation") {
-      const timer = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 0) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [phase]);
-
-  const handleTeamComplete = (analyst: string, operator: string) => {
-    setAnalystName(analyst);
-    setOperatorName(operator);
-    setPhase("investigation");
-  };
+  const [phase, setPhase] = useState<Phase>("loading");
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background">
-      {phase === "title" && <TitleScreen onComplete={() => setPhase("logo")} />}
-      {phase === "logo" && <LogoReveal onComplete={() => setPhase("team")} />}
-      {phase === "team" && <TeamIdentification onComplete={handleTeamComplete} />}
-      {phase === "investigation" && <InvestigationMap timeRemaining={timeRemaining} />}
+      {phase === "loading" && <CoverLoadingScreen onComplete={() => setPhase("map")} />}
+      {phase === "map" && <CoverMapReveal />}
     </main>
   );
 };

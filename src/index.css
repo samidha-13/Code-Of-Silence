@@ -251,4 +251,91 @@ All colors MUST be HSL.
   .animate-scan {
     animation: scan 3s ease-in-out infinite;
   }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(12deg); }
+    25% { transform: translate(10px, -10px) rotate(15deg); }
+    50% { transform: translate(-5px, 5px) rotate(10deg); }
+    75% { transform: translate(-10px, -5px) rotate(14deg); }
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes spin-reverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+
+  @keyframes zoom {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(220, 20, 60, 0.5)); }
+    50% { filter: drop-shadow(0 0 20px rgba(220, 20, 60, 0.8)); }
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes grid {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(60px, 60px); }
+  }
+
+  @keyframes tape {
+    0% { transform: translateX(0) rotate(-1deg); }
+    100% { transform: translateX(-50%) rotate(-1deg); }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 6s linear infinite;
+  }
+
+  .animate-spin-reverse {
+    animation: spin-reverse 4s linear infinite;
+  }
+
+  .animate-zoom {
+    animation: zoom 1.5s ease-in-out infinite;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-shine {
+    animation: shine 1.5s ease-in-out infinite;
+  }
+
+  .animate-grid {
+    animation: grid 15s linear infinite;
+  }
+
+  .animate-tape {
+    animation: tape 12s linear infinite;
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .particle {
+    animation: float 4s ease-in-out infinite;
+  }
 }
