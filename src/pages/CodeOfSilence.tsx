@@ -309,10 +309,10 @@ const CodeOfSilence = () => {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
             {[
-              { name: "Dr. Verma's Office", icon: "📁", desc: "Personal files and notes", active: true, room: "verma" },
-              { name: "Research Lab", icon: "🔬", desc: "Experimental data", active: true, room: "research" },
-              { name: "Archives", icon: "📚", desc: "Historical records", active: true, room: "archive" },
-              { name: "Server Files", icon: "💾", desc: "Digital evidence", active: true, room: "server" }
+              { name: "Dr. Verma's Office", icon: "📁", desc: "Personal files and notes", active: false, room: "verma" },
+              { name: "Research Lab", icon: "🔬", desc: "Experimental data", active: false, room: "research" },
+              { name: "Archives", icon: "📚", desc: "Historical records", active: false, room: "archive" },
+              { name: "Server Files", icon: "💾", desc: "Digital evidence", active: false, room: "server" }
             ].map((folder, idx) => (
               <a
                 key={idx}
