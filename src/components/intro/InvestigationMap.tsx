@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { BookOpen, Beaker, FolderOpen, Server } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LoadingScreen } from "./LoadingScreen";
 
 interface Location {
   id: string;
@@ -68,24 +70,24 @@ interface InvestigationMapProps {
 }
 
 export const InvestigationMap = ({ timeRemaining }: InvestigationMapProps) => {
+  const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showPuzzle, setShowPuzzle] = useState(false);
   const [clues, setClues] = useState<Clue[]>([]);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [revealedNumbers, setRevealedNumbers] = useState<Set<number>>(new Set());
   const [activeTeaserId, setActiveTeaserId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingLocation, setLoadingLocation] = useState<LocationWithTeaser | null>(null);
 
   useEffect(() => {
-    // Randomize clues on mount
     const shuffled = [...cluesData].sort(() => Math.random() - 0.5);
     setClues(shuffled);
   }, []);
 
-  const handleLocationClick = (locationId: string) => {
-    setActiveTeaserId(locationId);
-    setTimeout(() => {
-      setActiveTeaserId(null);
-    }, 5500);
+  const handleLocationClick = (location: LocationWithTeaser) => {
+    setLoadingLocation(location);
+    setIsLoading(true);
   };
 
   const handleAnswerChange = (clueIndex: number, value: string) => {
@@ -102,6 +104,10 @@ export const InvestigationMap = ({ timeRemaining }: InvestigationMapProps) => {
     const secs = seconds % 60;
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
+
+  if (isLoading && loadingLocation) {
+    return <LoadingScreen locationName={loadingLocation.name} locationColor={loadingLocation.color} />;
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black animate-fade-in">
@@ -190,7 +196,7 @@ export const InvestigationMap = ({ timeRemaining }: InvestigationMapProps) => {
                 }}
                 onMouseEnter={() => setHoveredId(location.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                onClick={() => handleLocationClick(location.id)}
+                onClick={() => handleLocationClick(location)}
               >
                 {/* Outer Glow Pulse */}
                 <div

@@ -12,7 +12,7 @@ export const LoadingScreen = ({ locationName, locationColor }: LoadingScreenProp
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/game");
+      navigate(`/game?room=${locationName}`);
     }, 3000);
 
     return () => clearTimeout(timer);
