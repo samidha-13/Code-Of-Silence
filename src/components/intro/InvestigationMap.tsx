@@ -1,0 +1,377 @@
+import { useState, useEffect } from "react";
+import { BookOpen, Beaker, FolderOpen, Server } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+interface Location {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  position: { x: string; y: string };
+  color: string;
+}
+
+interface Clue {
+  text: string;
+  answer: string;
+  number: number;
+}
+
+interface LocationWithTeaser extends Location {
+  teaser: string;
+}
+
+const locations: LocationWithTeaser[] = [
+  {
+    id: "office",
+    name: "Dr. Verma's Office",
+    icon: <BookOpen className="w-8 h-8" />,
+    position: { x: "25%", y: "30%" },
+    color: "hsl(45 100% 50%)",
+    teaser: "A desk torn open… secrets once written, now gone.",
+  },
+  {
+    id: "lab",
+    name: "Research Lab",
+    icon: <Beaker className="w-8 h-8" />,
+    position: { x: "70%", y: "25%" },
+    color: "hsl(180 100% 50%)",
+    teaser: "The scent of chemicals and erased logs lingers.",
+  },
+  {
+    id: "archive",
+    name: "Personal Archive Room",
+    icon: <FolderOpen className="w-8 h-8" />,
+    position: { x: "30%", y: "70%" },
+    color: "hsl(120 100% 50%)",
+    teaser: "Files missing, truths buried deep.",
+  },
+  {
+    id: "server",
+    name: "Server Room",
+    icon: <Server className="w-8 h-8" />,
+    position: { x: "75%", y: "65%" },
+    color: "hsl(0 100% 50%)",
+    teaser: "Data trails… wiped clean but still whispering.",
+  },
+];
+
+const cluesData: Clue[] = [
+  { text: "Files missing. Secrets exposed.", answer: "Personal Archive Room", number: 3 },
+  { text: "Chemicals. Logs erased.", answer: "Research Lab", number: 2 },
+  { text: "Books scattered. Desk forced open.", answer: "Dr. Verma's Office", number: 1 },
+  { text: "Data stolen. Trail vanished.", answer: "Server Room", number: 4 },
+];
+
+interface InvestigationMapProps {
+  timeRemaining: number;
+}
+
+export const InvestigationMap = ({ timeRemaining }: InvestigationMapProps) => {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [showPuzzle, setShowPuzzle] = useState(false);
+  const [clues, setClues] = useState<Clue[]>([]);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [revealedNumbers, setRevealedNumbers] = useState<Set<number>>(new Set());
+  const [activeTeaserId, setActiveTeaserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Randomize clues on mount
+    const shuffled = [...cluesData].sort(() => Math.random() - 0.5);
+    setClues(shuffled);
+  }, []);
+
+  const handleLocationClick = (locationId: string) => {
+    setActiveTeaserId(locationId);
+    setTimeout(() => {
+      setActiveTeaserId(null);
+    }, 5500);
+  };
+
+  const handleAnswerChange = (clueIndex: number, value: string) => {
+    setAnswers(prev => ({ ...prev, [clueIndex]: value }));
+    
+    const clue = clues[clueIndex];
+    if (clue && value.trim().toLowerCase() === clue.answer.toLowerCase()) {
+      setRevealedNumbers(prev => new Set(prev).add(clue.number));
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-black animate-fade-in">
+      {/* Timer - Top Right */}
+      <div className="fixed top-6 right-6 z-50 animate-fade-in">
+        <div 
+          className="px-6 py-3 rounded-lg font-mono text-2xl font-bold border-2"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            color: timeRemaining < 300 ? 'hsl(0 100% 50%)' : 'hsl(0 100% 60%)',
+            borderColor: timeRemaining < 300 ? 'hsl(0 100% 50%)' : 'hsl(0 100% 50% / 0.5)',
+            boxShadow: `0 0 30px ${timeRemaining < 300 ? 'rgba(255, 0, 0, 0.6)' : 'rgba(255, 0, 0, 0.3)'}`,
+            animation: timeRemaining < 300 ? 'pulse 1s infinite' : 'none',
+          }}
+        >
+          {formatTime(timeRemaining)}
+        </div>
+      </div>
+
+      {/* Blueprint Background Grid */}
+      <div className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 200, 255, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 200, 255, 0.3) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+        }}
+      />
+      
+      {/* Holographic Scan Lines */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 via-transparent to-cyan-500/10 animate-scan" />
+      </div>
+      
+      {/* Police Siren Effect */}
+      <div className="absolute top-0 left-0 w-32 h-32 bg-red-500/20 rounded-full blur-3xl animate-pulse"
+        style={{ animationDuration: '2s' }}
+      />
+      <div className="absolute bottom-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+        style={{ animationDuration: '2s', animationDelay: '1s' }}
+      />
+
+      {!showPuzzle ? (
+        <>
+          {/* Map Section */}
+          <div className="relative w-full max-w-6xl aspect-video mx-auto mt-32 px-4">
+            {/* Title */}
+            <div className="absolute -top-24 left-1/2 transform -translate-x-1/2 text-center w-full">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-cyan-400 mb-2 animate-fade-in whitespace-nowrap drop-shadow-[0_0_20px_rgba(0,200,255,0.8)]">
+                CRIME SCENE INVESTIGATION
+              </h2>
+              <p className="font-body text-white/60 tracking-wider animate-fade-in"
+                style={{ animationDelay: '0.3s' }}>
+                Analyze the investigation sites
+              </p>
+            </div>
+            
+            {/* Connection Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {locations.map((location, index) => {
+                const nextLocation = locations[(index + 1) % locations.length];
+                return (
+                  <line
+                    key={`line-${location.id}`}
+                    x1={location.position.x}
+                    y1={location.position.y}
+                    x2={nextLocation.position.x}
+                    y2={nextLocation.position.y}
+                    stroke={location.color}
+                    strokeWidth="2"
+                    strokeDasharray="5,5"
+                    opacity="0.3"
+                    className="animate-dash"
+                  />
+                );
+              })}
+            </svg>
+            
+            {/* Location Markers */}
+            {locations.map((location, index) => (
+              <div
+                key={location.id}
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group animate-marker-appear"
+                style={{
+                  left: location.position.x,
+                  top: location.position.y,
+                  animationDelay: `${index * 0.2}s`,
+                }}
+                onMouseEnter={() => setHoveredId(location.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => handleLocationClick(location.id)}
+              >
+                {/* Outer Glow Pulse */}
+                <div
+                  className="absolute inset-0 rounded-full animate-ping opacity-50"
+                  style={{
+                    width: '120px',
+                    height: '120px',
+                    backgroundColor: location.color,
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    animationDuration: '2s',
+                  }}
+                />
+                
+                {/* Marker Circle */}
+                <div
+                  className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    hoveredId === location.id ? 'scale-125' : 'scale-100'
+                  }`}
+                  style={{
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    border: `3px solid ${location.color}`,
+                    boxShadow: `0 0 30px ${location.color}, inset 0 0 20px ${location.color}`,
+                  }}
+                >
+                  <div style={{ color: location.color }}>
+                    {location.icon}
+                  </div>
+                </div>
+                
+                {/* Location Label */}
+                <div
+                  className={`absolute top-24 left-1/2 transform -translate-x-1/2 whitespace-nowrap transition-all duration-300 ${
+                    hoveredId === location.id ? 'opacity-100 translate-y-0' : 'opacity-70 translate-y-2'
+                  }`}
+                >
+                  <div
+                    className="px-4 py-2 rounded font-body text-sm font-semibold"
+                    style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      border: `1px solid ${location.color}`,
+                      color: location.color,
+                      boxShadow: `0 0 20px ${location.color}`,
+                    }}
+                  >
+                    {location.name}
+                  </div>
+                </div>
+                
+                {/* Hover Ring Effect */}
+                {hoveredId === location.id && (
+                  <div
+                    className="absolute inset-0 rounded-full animate-ping"
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      left: '50%',
+                      top: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      border: `2px solid ${location.color}`,
+                      animationDuration: '1s',
+                    }}
+                  />
+                )}
+
+                {/* Teaser Text - Appears on Click */}
+                {activeTeaserId === location.id && (
+                  <div
+                    className="absolute top-28 left-1/2 transform -translate-x-1/2 whitespace-nowrap animate-fade-in"
+                    style={{ animationDuration: '0.5s' }}
+                  >
+                    <div
+                      className="px-6 py-3 rounded-lg font-body text-sm italic backdrop-blur-sm"
+                      style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                        border: `2px solid ${location.color}`,
+                        color: location.color,
+                        boxShadow: `0 0 30px ${location.color}, inset 0 0 15px ${location.color}20`,
+                        animation: 'fade-in 0.5s ease-out, fade-out 0.5s ease-out 5s forwards',
+                      }}
+                    >
+                      {location.teaser}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Reveal Puzzle Button */}
+          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 animate-fade-in">
+            <Button
+              onClick={() => setShowPuzzle(true)}
+              className="h-16 px-8 text-lg font-display font-bold bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white border-2 border-cyan-500/50 transition-all duration-300"
+              style={{
+                boxShadow: "0 0 40px rgba(0, 200, 255, 0.4)",
+              }}
+            >
+              The path is hidden… Enter a room name to discover its true order.
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Puzzle Section */}
+          <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-cyan-400 mb-12 text-center animate-fade-in"
+              style={{
+                textShadow: '0 0 20px rgba(0, 200, 255, 0.8)',
+              }}>
+              Decode the Investigation Sequence
+            </h2>
+
+            {/* Clue Lines */}
+            <div className="w-full max-w-3xl space-y-6">
+              {clues.map((clue, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center gap-4 animate-fade-in"
+                  style={{ 
+                    animationDelay: `${index * 0.15}s`,
+                  }}
+                >
+                  {/* Clue Text */}
+                  <div className="flex-1 px-6 py-4 rounded-lg border-2 border-white/20 bg-black/50 backdrop-blur-sm">
+                    <p className="font-body text-white text-lg">
+                      {clue.text}
+                    </p>
+                  </div>
+
+                  {/* Input Box */}
+                  <div className="relative w-72">
+                    <Input
+                      type="text"
+                      value={answers[index] || ''}
+                      onChange={(e) => handleAnswerChange(index, e.target.value)}
+                      placeholder="Enter room name"
+                      className="h-12 bg-black/50 border-2 border-cyan-500/30 text-white placeholder:text-white/30 font-body
+                        focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300"
+                      style={{
+                        boxShadow: '0 0 20px rgba(0, 200, 255, 0.1)',
+                      }}
+                    />
+                  </div>
+
+                  {/* Revealed Number */}
+                  <div className="w-16 h-12 flex items-center justify-center">
+                    {revealedNumbers.has(clue.number) && (
+                      <div 
+                        className="font-mono text-3xl font-bold animate-scale-in"
+                        style={{
+                          color: 'hsl(0 100% 60%)',
+                          textShadow: '0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4)',
+                          animation: 'scale-in 0.3s ease-out, pulse 1.5s ease-in-out',
+                        }}
+                      >
+                        {clue.number}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Back to Map Button */}
+            <Button
+              onClick={() => setShowPuzzle(false)}
+              className="mt-12 h-12 px-6 font-body font-semibold bg-black/50 hover:bg-black/70 text-white border-2 border-white/30 hover:border-white/50 transition-all duration-300"
+            >
+              ⬅ Back to Map
+            </Button>
+          </div>
+        </>
+      )}
+
+      {/* Corner Grid Accents */}
+      <div className="absolute top-0 left-0 w-32 h-32 border-t-2 border-l-2 border-cyan-500/50" />
+      <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-cyan-500/50" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 border-b-2 border-l-2 border-cyan-500/50" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 border-b-2 border-r-2 border-cyan-500/50" />
+    </div>
+  );
+};
