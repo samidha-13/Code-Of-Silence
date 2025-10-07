@@ -77,7 +77,7 @@ function WebsiteScreen() {
 
 const LoadPaper = ({ position = [-1.2, 2.7, 4], rotation = [0, 1.5, 0], scale = 0.02 }) => {
   const PaperRef = useRef();
-  const { scene } = useGLTF("/model/pageThree.glb");
+  const { scene } = useGLTF("/model/pageFour.glb");
 
   if (!scene) return null;
 
