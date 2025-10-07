@@ -88,7 +88,7 @@ function WebsiteScreen() {
   );
 }
 
-const LoadPaper = ({ position = [0.6, 2.4, 1.7], rotation = [0, 0, 0], scale = 0.02 }) => {
+const LoadPaper = ({ position = [1.6, 2.2, 0.8], rotation = [0, 1.5, 0], scale = 0.02 }) => {
   const PaperRef = useRef();
   const { scene } = useGLTF("/model/pageOne.glb");
 

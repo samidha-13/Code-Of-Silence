@@ -60,8 +60,18 @@ export const MapReveal = () => {
     setIsLoading(true);
   };
 
+  const idToRoom = (id: string) => {
+    switch (id) {
+      case 'office': return 'verma';
+      case 'lab': return 'research';
+      case 'archive': return 'archive';
+      case 'server': return 'server';
+      default: return undefined;
+    }
+  };
+
   if (isLoading && loadingLocation) {
-    return <LoadingScreen locationName={loadingLocation.name} locationColor={loadingLocation.color} />;
+    return <LoadingScreen locationName={loadingLocation.name} locationColor={loadingLocation.color} roomId={idToRoom(loadingLocation.id)} />;
   }
 
   return (

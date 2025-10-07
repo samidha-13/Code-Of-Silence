@@ -29,7 +29,7 @@ function WebsiteScreen() {
   return (
     <Html
       transform
-      position={[0, 4, 14]}
+      position={[0, 3.5, 15]}
       rotation={[0, 273.24, 0.01]}
       scale={scale}
       distanceFactor={1}
@@ -75,6 +75,16 @@ function WebsiteScreen() {
   );
 }
 
+const LoadPaper = ({ position = [-1.2, 2.7, 4], rotation = [0, 1.5, 0], scale = 0.02 }) => {
+  const PaperRef = useRef();
+  const { scene } = useGLTF("/model/pageThree.glb");
+
+  if (!scene) return null;
+
+  return <primitive ref={PaperRef} object={scene} position={position} rotation={rotation} scale={scale} />;
+};
+
+
 const LoadModel = () => {
   const { scene } = useGLTF("/model/RoomThreeModel.glb");
 
@@ -89,7 +99,7 @@ const LoadModel = () => {
     }
   }, [scene]);
 
-  return <primitive object={scene} position={[0, 0, 0]} scale={0.12} />;
+  return <primitive object={scene} position={[0, 2.3, 5]} scale={0.5} />;
 };
 
 const FirstPersonControls = () => {
@@ -99,7 +109,8 @@ const FirstPersonControls = () => {
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
   const velocity = useRef(new THREE.Vector3());
-  const moveSpeed = 0.05;
+  // reduced movement speed by 50%
+  const moveSpeed = 0.005;
   const mouseSensitivity = 0.002;
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -186,6 +197,7 @@ const RoomThree = () => {
 
         <Suspense fallback={null}>
           <LoadModel />
+          <LoadPaper />
           <WebsiteScreen />
           <FirstPersonControls />
         </Suspense>

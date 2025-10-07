@@ -6,7 +6,7 @@ import { useGame } from "@/contexts/GameContext";
 
 function WebsiteScreen() {
   const { websiteUrl, setWebsiteUrl } = useGame();
-  const [scale, setScale] = useState(1.6);
+  const [scale, setScale] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -22,14 +22,14 @@ function WebsiteScreen() {
   }, [setWebsiteUrl]);
 
   const handleScaleClick = () => {
-    setScale(isZoomed ? 1.6 : 4);
+    setScale(isZoomed ? 1 : 2);
     setIsZoomed(!isZoomed);
   };
 
   return (
     <Html
       transform
-      position={[10, 6, 0]}
+      position={[4, 2.8, 5.2]}
       rotation={[0, 4.8, 0]}
       scale={scale}
       distanceFactor={1}
@@ -75,6 +75,16 @@ function WebsiteScreen() {
   );
 }
 
+const LoadPaper = ({ position = [0.1, 2.8, 4.1], rotation = [0, 0, 0], scale = 0.02 }) => {
+  const PaperRef = useRef();
+  const { scene } = useGLTF("/model/pageFour.glb");
+
+  if (!scene) return null;
+
+  return <primitive ref={PaperRef} object={scene} position={position} rotation={rotation} scale={scale} />;
+};
+
+
 const LoadModel = () => {
   const { scene } = useGLTF("/model/RoomFourModel.glb");
 
@@ -89,7 +99,7 @@ const LoadModel = () => {
     }
   }, [scene]);
 
-  return <primitive object={scene} position={[0, 0, 0]} scale={0.12} />;
+  return <primitive object={scene} position={[0, 2.5, 5]} scale={0.12} />;
 };
 
 const FirstPersonControls = () => {
@@ -99,7 +109,8 @@ const FirstPersonControls = () => {
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
   const velocity = useRef(new THREE.Vector3());
-  const moveSpeed = 0.05;
+  // reduced movement speed by 50%
+  const moveSpeed = 0.005;
   const mouseSensitivity = 0.002;
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -186,6 +197,7 @@ const RoomFour = () => {
 
         <Suspense fallback={null}>
           <LoadModel />
+          <LoadPaper />
           <WebsiteScreen />
           <FirstPersonControls />
         </Suspense>

@@ -3,20 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 interface LoadingScreenProps {
-  locationName: string;
+  // human-readable label that many callers pass (e.g. "Dr. Verma's Office")
+  locationName?: string;
+  // explicit room id (preferred) that maps to the switch in Game.tsx ("verma", "research", "archive", "server")
+  roomId?: string;
   locationColor: string;
 }
 
-export const LoadingScreen = ({ locationName, locationColor }: LoadingScreenProps) => {
+export const LoadingScreen = ({ locationName, locationColor, roomId }: LoadingScreenProps) => {
   const navigate = useNavigate();
+
+  // Normalize: Game.tsx expects the query param to be one of: verma, research, archive, server
+  const mapLabelToRoom = (label?: string) => {
+    if (!label) return undefined;
+    const l = label.toLowerCase();
+    if (l.includes('verma') || l.includes('office')) return 'verma';
+    if (l.includes('research') || l.includes('lab')) return 'research';
+    if (l.includes('archive') || l.includes('archives') || l.includes('personal')) return 'archive';
+    if (l.includes('server')) return 'server';
+    return undefined;
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate(`/game?room=${locationName}`);
+      // prefer explicit roomId, otherwise try to infer from the human-readable label
+      const room = roomId || mapLabelToRoom(locationName) || '';
+      navigate(`/game?room=${room}`);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, locationName, roomId]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">

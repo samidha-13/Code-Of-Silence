@@ -6,13 +6,13 @@ import { useGame } from "@/contexts/GameContext";
 
 function WebsiteScreen() {
   const { websiteUrl, setWebsiteUrl } = useGame();
-  const [scale, setScale] = useState(0.2);
+  const [scale, setScale] = useState(0.6);
   const [isZoomed, setIsZoomed] = useState(false);
   const [showWebsite, setShowWebsite] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowWebsite(true), 11000);
+    const timer = setTimeout(() => setShowWebsite(true), 4000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -28,7 +28,7 @@ function WebsiteScreen() {
   }, [setWebsiteUrl]);
 
   const handleScaleClick = () => {
-    setScale(isZoomed ? 0.2 : 1);
+    setScale(isZoomed ? 0.5 : 1.5);
     setIsZoomed(!isZoomed);
   };
 
@@ -37,8 +37,8 @@ function WebsiteScreen() {
   return (
     <Html
       transform
-      position={[3.9, 3.2, 0]}
-      rotation={[0, 287.5, 0]}
+      position={[-2.7,4.5, 6]}
+      rotation={[0, 1.6, 0]}
       scale={scale}
       distanceFactor={1}
       occlude={false}
@@ -83,6 +83,16 @@ function WebsiteScreen() {
   );
 }
 
+const LoadPaper = ({ position = [-1.59, 2.56, 4], rotation = [0, 1.5, 0], scale = 0.06 }) => {
+  const PaperRef = useRef();
+  const { scene } = useGLTF("/model/pageTwo.glb");
+
+  if (!scene) return null;
+
+  return <primitive ref={PaperRef} object={scene} position={position} rotation={rotation} scale={scale} />;
+};
+
+
 const LoadModel = () => {
   const { scene } = useGLTF("/model/RoomTwoModel.glb");
 
@@ -97,7 +107,7 @@ const LoadModel = () => {
     }
   }, [scene]);
 
-  return <primitive object={scene} position={[0, 0, 0]} scale={0.15} />;
+  return <primitive object={scene} position={[-1, 2.8, 4]} scale={0.8} />;
 };
 
 const FirstPersonControls = () => {
@@ -107,7 +117,8 @@ const FirstPersonControls = () => {
   const previousMousePosition = useRef({ x: 0, y: 0 });
 
   const velocity = useRef(new THREE.Vector3());
-  const moveSpeed = 0.05;
+  // reduced movement speed by 50%
+  const moveSpeed = 0.025;
   const mouseSensitivity = 0.002;
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -196,6 +207,7 @@ const RoomTwo = () => {
 
         <Suspense fallback={null}>
           <LoadModel />
+          <LoadPaper />
           <WebsiteScreen />
           <FirstPersonControls />
         </Suspense>
