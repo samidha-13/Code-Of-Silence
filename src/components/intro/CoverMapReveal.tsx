@@ -28,7 +28,7 @@ const nodes: Node[] = [
   },
   {
     id: "research",
-    label: "Research Lab",
+    label: "Server Room",
     href: "/game",
     color: "#FFD700",
     x: 180,
@@ -39,7 +39,7 @@ const nodes: Node[] = [
   },
   {
     id: "archive",
-    label: "Archive Room",
+    label: "Research Lab",
     href: "/game",
     color: "#9370DB",
     x: 0,
@@ -50,7 +50,7 @@ const nodes: Node[] = [
   },
   {
     id: "server",
-    label: "Server Room",
+    label: "Archive Room",
     href: "/game",
     color: "#00CED1",
     x: -180,

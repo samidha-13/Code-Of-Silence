@@ -36,7 +36,7 @@ const locations: LocationWithTeaser[] = [
   },
   {
     id: "lab",
-    name: "Research Lab",
+    name: "Server Room",
     icon: <Beaker className="w-8 h-8" />,
     position: { x: "70%", y: "25%" },
     color: "hsl(180 100% 50%)",
@@ -44,7 +44,7 @@ const locations: LocationWithTeaser[] = [
   },
   {
     id: "archive",
-    name: "Personal Archive Room",
+    name: "Research Lab",
     icon: <FolderOpen className="w-8 h-8" />,
     position: { x: "30%", y: "70%" },
     color: "hsl(120 100% 50%)",
@@ -52,7 +52,7 @@ const locations: LocationWithTeaser[] = [
   },
   {
     id: "server",
-    name: "Server Room",
+    name: "Archive Room",
     icon: <Server className="w-8 h-8" />,
     position: { x: "75%", y: "65%" },
     color: "hsl(0 100% 50%)",
