@@ -15,7 +15,7 @@ function WebsiteScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowWebsite(true);
-    }, 10000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
