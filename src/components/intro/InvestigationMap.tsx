@@ -40,7 +40,7 @@ const locations: LocationWithTeaser[] = [
     icon: <Beaker className="w-8 h-8" />,
     position: { x: "70%", y: "25%" },
     color: "hsl(180 100% 50%)",
-    teaser: "The scent of chemicals and erased logs lingers.",
+    teaser: "Files missing, truths buried deep.",
   },
   {
     id: "archive",
@@ -48,7 +48,7 @@ const locations: LocationWithTeaser[] = [
     icon: <FolderOpen className="w-8 h-8" />,
     position: { x: "30%", y: "70%" },
     color: "hsl(120 100% 50%)",
-    teaser: "Files missing, truths buried deep.",
+    teaser: "The scent of chemicals and erased logs lingers.",
   },
   {
     id: "server",
@@ -232,7 +232,7 @@ export const InvestigationMap = () => {
                 <div
                   className="absolute inset-0 rounded-full animate-ping opacity-50"
                   style={{
-                    width: '120px',
+                    width: '200px',
                     height: '120px',
                     backgroundColor: location.color,
                     left: '50%',
@@ -312,8 +312,8 @@ export const InvestigationMap = () => {
                 {/* Teaser Text - Appears on Click */}
                 {activeTeaserId === location.id && (
                   <div
-                    className="absolute top-28 left-1/2 transform -translate-x-1/2 whitespace-nowrap animate-fade-in"
-                    style={{ animationDuration: '0.5s' }}
+                    className="absolute top-28 left-1/2 transform -translate-x-1/2 animate-fade-in"
+                    style={{ animationDuration: '0.5s', zIndex: 1000 }}
                   >
                     <div
                       className="px-6 py-3 rounded-lg font-body text-sm italic backdrop-blur-sm"
@@ -322,7 +322,11 @@ export const InvestigationMap = () => {
                         border: `2px solid ${location.color}`,
                         color: location.color,
                         boxShadow: `0 0 30px ${location.color}, inset 0 0 15px ${location.color}20`,
-                        animation: 'fade-in 0.5s ease-out, fade-out 0.5s ease-out 5s forwards',
+                        maxWidth: '640px',
+                        whiteSpace: 'normal',
+                        textAlign: 'center',
+                        // keep a simple appear animation (rely on setTimeout to hide)
+                        animation: 'fade-in 0.5s ease-out',
                       }}
                     >
                       {location.teaser}
