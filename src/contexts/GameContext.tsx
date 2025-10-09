@@ -12,7 +12,7 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 const GAME_DURATION = 3600; // 60 minutes in seconds
-const DEFAULT_WEBSITE_URL = "https://code-of-silence-unlocked-53719-03265-76-99879.lovable.app";
+const DEFAULT_WEBSITE_URL = "https://code-of-silence-unlocked-53719-03265-76-72740.lovable.app";
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [gameStartTime, setGameStartTime] = useState<number>(() => {
