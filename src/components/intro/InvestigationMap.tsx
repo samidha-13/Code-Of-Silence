@@ -232,7 +232,7 @@ export const InvestigationMap = () => {
                 <div
                   className="absolute inset-0 rounded-full animate-ping opacity-50"
                   style={{
-                    width: '120px',
+                    width: '200px',
                     height: '120px',
                     backgroundColor: location.color,
                     left: '50%',
@@ -322,7 +322,7 @@ export const InvestigationMap = () => {
                         border: `2px solid ${location.color}`,
                         color: location.color,
                         boxShadow: `0 0 30px ${location.color}, inset 0 0 15px ${location.color}20`,
-                        maxWidth: '320px',
+                        maxWidth: '640px',
                         whiteSpace: 'normal',
                         textAlign: 'center',
                         // keep a simple appear animation (rely on setTimeout to hide)
