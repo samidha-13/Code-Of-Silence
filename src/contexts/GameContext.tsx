@@ -15,29 +15,10 @@ const GAME_DURATION = 3600; // 60 minutes in seconds
 const DEFAULT_WEBSITE_URL = "https://code-of-silence-unlocked-53719-03265-76-14967.lovable.app/";
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [gameStartTime, setGameStartTime] = useState<number>(() => {
-    const saved = localStorage.getItem("gameStartTime");
-    return saved ? parseInt(saved) : Date.now();
-  });
-
-  const [puzzleSolved, setPuzzleSolvedState] = useState<boolean>(() => {
-    const saved = localStorage.getItem("puzzleSolved");
-    return saved === "true";
-  });
-
-  const [websiteUrl, setWebsiteUrlState] = useState<string>(() => {
-    const saved = localStorage.getItem("websiteUrl");
-    return saved || DEFAULT_WEBSITE_URL;
-  });
-
-  const [timeRemaining, setTimeRemaining] = useState<number>(() => {
-    const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
-    return Math.max(0, GAME_DURATION - elapsed);
-  });
-
-  useEffect(() => {
-    localStorage.setItem("gameStartTime", gameStartTime.toString());
-  }, [gameStartTime]);
+  const [gameStartTime, setGameStartTime] = useState<number>(() => Date.now());
+  const [puzzleSolved, setPuzzleSolvedState] = useState<boolean>(false);
+  const [websiteUrl, setWebsiteUrlState] = useState<string>(DEFAULT_WEBSITE_URL);
+  const [timeRemaining, setTimeRemaining] = useState<number>(GAME_DURATION);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -53,14 +34,19 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(timer);
   }, [gameStartTime]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("d2_solved");
+      sessionStorage.removeItem("d3_solved");
+    }
+  }, []);
+
   const setPuzzleSolved = (solved: boolean) => {
     setPuzzleSolvedState(solved);
-    localStorage.setItem("puzzleSolved", solved.toString());
   };
 
   const setWebsiteUrl = (url: string) => {
     setWebsiteUrlState(url);
-    localStorage.setItem("websiteUrl", url);
   };
 
   const resetGame = () => {
@@ -68,9 +54,12 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setGameStartTime(newStartTime);
     setPuzzleSolvedState(false);
     setWebsiteUrlState(DEFAULT_WEBSITE_URL);
-    localStorage.setItem("gameStartTime", newStartTime.toString());
-    localStorage.setItem("puzzleSolved", "false");
-    localStorage.setItem("websiteUrl", DEFAULT_WEBSITE_URL);
+    setTimeRemaining(GAME_DURATION);
+
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("d2_solved");
+      sessionStorage.removeItem("d3_solved");
+    }
   };
 
   return (

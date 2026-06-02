@@ -61,7 +61,7 @@ const locations: LocationWithTeaser[] = [
 ];
 
 const cluesData: Clue[] = [
-  { text: "Files missing. Secrets exposed.", answer: "Personal Archive Room", number: 3 },
+  { text: "Files missing. Secrets exposed.", answer: "Archive Room", number: 3 },
   { text: "Chemicals. Logs erased.", answer: "Research Lab", number: 2 },
   { text: "Books scattered. Desk forced open.", answer: "Dr. Verma's Office", number: 1 },
   { text: "Data stolen. Trail vanished.", answer: "Server Room", number: 4 },

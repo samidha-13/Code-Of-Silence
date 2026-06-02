@@ -1,14 +1,30 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Game from "./pages/Game";
 import NotFound from "./pages/NotFound";
 import CodeOfSilence from "./pages/CodeOfSilence";
+import { useGame } from "./contexts/GameContext";
 
 const queryClient = new QueryClient();
+
+const TimerRedirect = () => {
+  const { timeRemaining, resetGame } = useGame();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (timeRemaining <= 0) {
+      resetGame();
+      navigate("/", { replace: true });
+    }
+  }, [timeRemaining, resetGame, navigate]);
+
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -16,6 +32,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <TimerRedirect />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/game" element={<Game />} />
