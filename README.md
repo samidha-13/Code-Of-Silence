@@ -1,73 +1,211 @@
-# Welcome to your Lovable project
+# CODE OF SILENCE — HOW TO PLAY
 
-## Project info
+## 1. Run the Game
 
-**URL**: https://lovable.dev/projects/405a2075-67db-40f3-8eb7-f033f1ae97a1
+Open the project folder in the terminal and run:
 
-## How can I edit this code?
+```bash
+npm install
+```
 
-There are several ways of editing your application.
+Then start the game:
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/405a2075-67db-40f3-8eb7-f033f1ae97a1) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open the local URL provided by the terminal.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 2. Start the Investigation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+On the game screen, click:
 
-## What technologies are used for this project?
+> **PATH IS HIDDEN**
 
-This project is built with:
+The following sentence will appear:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+> **Only the right name reveals the way forward. Which room will you try?**
 
-## How can I deploy this project?
+The room names will appear in a **shuffled order**, but the correct investigation sequence is always:
 
-Simply open [Lovable](https://lovable.dev/projects/405a2075-67db-40f3-8eb7-f033f1ae97a1) and click on Share -> Publish.
+Files missing. Secrets exposed →  Archive Room
+Chemicals. Logs erased → Research Lab
+Data stolen. Trail vanished → Server Room
+Books scattered. Desk forced open → Dr. Verma's Offic
 
-## Can I connect a custom domain to my Lovable project?
+Enter the names **exactly as written above** and in this sequence to unlock the rooms.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 3. Dr. Verma's Office
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+After the rooms are unlocked, enter **Dr. Verma's Office**.
+
+First, click the **PC** and use the **Zoom button at the top-right corner** of the screen.
+
+Use the following passcode:
+
+```text
+112305
+```
+
+Investigate the files available on the PC and proceed to the Research Lab.
+
+---
+
+## 4. Research Lab
+
+Enter the Research Lab using:
+
+```text
+100110
+```
+
+Open the **Research Lab Terminal**.
+
+First type:
+
+```bash
+cheatsheet
+```
+
+Then execute the following commands:
+
+### Compile the executable
+
+```bash
+gcc buggy.code.c
+```
+
+### Run the executable
+
+```bash
+./buggy.code
+```
+
+This reveals the **motive**.
+
+### View the source code
+
+```bash
+nano buggy.code.c
+```
+
+### View the encoded file
+
+```bash
+cat encoded.base64.txt
+```
+
+### Decode the Base64 file
+
+```bash
+cat encoded.base64.txt | base64 --decode
+```
+
+The decoded output gives:
+
+```text
+7
+```
+
+Keep this number. It is required later.
+
+---
+
+## 5. Archive Room
+
+Enter the Archive Room using:
+
+```text
+452011
+```
+
+Solve the **Decode the Investigation Sequence** puzzle.
+
+The clues and their correct rooms are:
+
+* **Books scattered. Desk forced open.** → `Dr. Verma's Office`
+* **Chemicals. Logs erased.** → `Research Lab`
+* **Files missing. Secrets exposed.** → `Personal Archive Room`
+* **Data stolen. Trail vanished.** → `Server Room`
+
+The correct sequence is:
+
+1. `Dr. Verma's Office`
+2. `Research Lab`
+3. `Personal Archive Room`
+4. `Server Room`
+
+For the clue:
+
+> **Files missing. Secrets exposed.**
+
+enter:
+
+```text
+Personal Archive Room
+```
+
+Complete the puzzle and proceed to the Server Room.
+
+---
+
+## 6. Server Room
+
+Enter the Server Room using:
+
+```text
+731104
+```
+
+Open the **Server Rack Boot Sequence Reorder** puzzle.
+
+Click:
+
+> **SYSTEM CALIBRATE**
+
+Make the following connections:
+
+```text
+1 → 3
+3 → 1
+2 → 2
+4 → 4
+```
+
+After completing the puzzle, click **Back to Map**.
+
+---
+
+## 7. Return to the Map
+
+On the map, click:
+
+> **X**
+
+Enter the number obtained from the Research Lab:
+
+```text
+7
+```
+
+This reveals the next required clue.
+
+---
+
+## 8. Final Code
+
+The game requires you to investigate/open a maximum of **8 files/puzzle steps** in total to collect the clues needed for the final combination.
+
+Once all required clues have been obtained, enter the final 4-digit code:
+
+```text
+8745
+```
+
+This completes the investigation.
+
+# END OF CODE OF SILENCE
